@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export const MoviesContext = React.createContext(null);
 
 const MoviesContextProvider = (props) => {
   const [favorites, setFavorites] = useState( [] )
   const [myReviews, setMyReviews] = useState( {} ) 
+  const [playlists, setPlaylists] = useState([])
 
   const addToFavorites = (movie) => {
     let newFavorites = [];
@@ -16,6 +17,21 @@ const MoviesContextProvider = (props) => {
     }
     setFavorites(newFavorites)
   };
+
+  useEffect(() => {
+    console.log(playlists.map((it) => it));
+  }, [playlists]); // This runs whenever `playlists` changes
+
+  const addToPlaylist = (movie) => {
+    let newPlaylists = []
+    if (!playlists.includes(movie.id)) {
+      newPlaylists = [...playlists, movie.id];
+    }
+    else {
+      newPlaylists = [...playlists]
+    }
+    setPlaylists(newPlaylists)
+  }
 
   const addReview = (movie, review) => {
     setMyReviews( {...myReviews, [movie.id]: review } )
@@ -34,6 +50,8 @@ const MoviesContextProvider = (props) => {
         favorites,
         addToFavorites,
         removeFromFavorites,
+        playlists,
+        addToPlaylist,
         addReview,
       }}
     >
